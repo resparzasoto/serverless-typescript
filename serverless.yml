@@ -1,0 +1,54 @@
+service: serverless-typescript
+
+frameworkVersion: '3'
+
+configValidationMode: error
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+
+provider:
+  name: aws
+  region: us-east-1
+
+  deploymentBucket:
+    blockPublicAccess: true
+
+  httpApi:
+    metrics: true
+    cors: true
+
+  runtime: nodejs20.x
+  architecture: arm64
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: !GetAtt CountriesDynamoDBTable.Arn
+
+custom:
+  config:
+    stage: ${opt:stage, 'dev'}
+    region: ${opt:region, 'us-east-1'}
+
+  esbuild:
+    bundle: true
+    minify: true
+
+package:
+  individually: true
+
+functions:
+  - ${file(./aws/functions/countries.yml)}
+
+resources:
+  - ${file(./aws/resources/dynamodb.yml)}

@@ -1,0 +1,23 @@
+CreateCountry:
+  handler: src/countries/createCountry/lambda.handler
+  description: Create countries lambda
+  memorySize: 128
+  timeout: 15
+  events:
+    - httpApi:
+        method: POST
+        path: /countries
+  environment:
+    COUNTRIES_TABLE_NAME: !Ref CountriesDynamoDBTable
+
+GetCountries:
+  handler: src/countries/getCountries/lambda.handler
+  description: Get countries lambda
+  memorySize: 128
+  timeout: 15
+  events:
+    - httpApi:
+        method: GET
+        path: /countries
+  environment:
+    COUNTRIES_TABLE_NAME: !Ref CountriesDynamoDBTable
