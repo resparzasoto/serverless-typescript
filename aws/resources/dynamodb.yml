@@ -4,9 +4,11 @@ Resources:
     Properties:
       TableName: Countries
       BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
       Replicas:
-        - us-east-1
-        - us-west-2
+      - Region: us-east-1
+      - Region: us-west-2
       AttributeDefinitions:
       - AttributeName: id
         AttributeType: S
